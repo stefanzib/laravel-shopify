@@ -86,7 +86,7 @@ trait ManagesFulfillments
 
     public function createOrderFulfillmentEvent($orderId, $fulfillmentId, array $data): ApiResource
     {
-        return $this->createResource('events', $data, ['orders', $orderId, 'fulfillments', $fulfillmentId]);
+        return $this->createResource('events', $data, ['orders', $orderId, 'fulfillments', $fulfillmentId], 'fulfillment_event');
     }
 
     public function deleteOrderFulfillmentEvent($orderId, $fulfillmentId, $eventId): void
