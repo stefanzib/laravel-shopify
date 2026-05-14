@@ -6,11 +6,21 @@ class Factory
 {
     public static function fromConfig(): Shopify
     {
-        return new Shopify(
+        $shopify = new Shopify(
             config('shopify.credentials.access_token'),
             config('shopify.credentials.domain'),
             config('shopify.credentials.api_version'),
         );
+
+        if ($connectTimeout = config('shopify.http.connect_timeout')) {
+            $shopify->withConnectTimeout((int) $connectTimeout);
+        }
+
+        if ($timeout = config('shopify.http.timeout')) {
+            $shopify->withTimeout((int) $timeout);
+        }
+
+        return $shopify;
     }
 
     public static function fromArray(array $data): Shopify

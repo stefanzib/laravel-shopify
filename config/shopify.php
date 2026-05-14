@@ -43,4 +43,22 @@ return [
         'include_validation_errors' => false,
 
     ],
+
+    'http' => [
+
+        /*
+         * Maximum number of seconds to wait while establishing the TCP/TLS
+         * connection to the Shopify Admin API. Keep this short so that
+         * transient routing or peering issues fail fast instead of holding
+         * queue workers hostage.
+         */
+        'connect_timeout' => env('SHOPIFY_CONNECT_TIMEOUT', 5),
+
+        /*
+         * Maximum total seconds for a single Admin API request, including
+         * connection, request body upload, and full response read.
+         */
+        'timeout' => env('SHOPIFY_TIMEOUT', 30),
+
+    ],
 ];
