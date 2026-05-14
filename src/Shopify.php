@@ -51,8 +51,14 @@ class Shopify
     use TransformsResources;
 
     protected string $accessToken;
+
     protected string $domain;
+
     protected string $apiVersion;
+
+    protected int $connectTimeout = 5;
+
+    protected int $timeout = 30;
 
     protected ?PendingRequest $httpClient = null;
 
@@ -69,7 +75,9 @@ class Shopify
     public function getHttpClient(): PendingRequest
     {
         return $this->httpClient ??= Http::baseUrl($this->getBaseUrl())
-            ->withHeaders(['X-Shopify-Access-Token' => $this->accessToken]);
+            ->withHeaders(['X-Shopify-Access-Token' => $this->accessToken])
+            ->connectTimeout($this->connectTimeout)
+            ->timeout($this->timeout);
     }
 
     public function graphQl(): PendingRequest
@@ -78,7 +86,9 @@ class Shopify
             ->withHeaders([
                 'X-Shopify-Access-Token' => $this->accessToken,
                 'Content-Type' => 'application/json',
-            ]);
+            ])
+            ->connectTimeout($this->connectTimeout)
+            ->timeout($this->timeout);
     }
 
     public function getBaseUrl(): string
@@ -98,6 +108,24 @@ class Shopify
         $this->accessToken = $accessToken;
         $this->domain = $domain;
         $this->apiVersion = $apiVersion;
+
+        $this->httpClient = null;
+
+        return $this;
+    }
+
+    public function withConnectTimeout(int $seconds): self
+    {
+        $this->connectTimeout = $seconds;
+
+        $this->httpClient = null;
+
+        return $this;
+    }
+
+    public function withTimeout(int $seconds): self
+    {
+        $this->timeout = $seconds;
 
         $this->httpClient = null;
 
